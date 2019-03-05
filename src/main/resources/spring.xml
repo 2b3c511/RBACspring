@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 1. 配置连接池 -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/rbac?useSSL=false"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <property name="maximumPoolSize" value="10"/>
+        <property name="minimumIdle" value="2"/>
+    </bean>
+
+    <!-- 2. 配置 sqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 把连接池对象，依赖注入给 SqlSessionFactoryBean 的dataSource 属性 -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 3. 配置有哪些 mapper 接口 -->
+    <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.westos.dao"/>
+    </bean>
+
+    <!-- 4. 启用事务注解 -->
+    <tx:annotation-driven/>
+    <!-- 5. 配置事务管理器 默认名称为：transactionManager-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 6. 扫描 service 类 -->
+    <context:component-scan base-package="com.westos.service"/>
+
+    <!-- 7. aop 配置 -->
+    <aop:aspectj-autoproxy/>
+    <!-- 8. 扫描 aspect 类 -->
+    <context:component-scan base-package="com.westos.aspect"/>
+    <!--9.springmvc 注解-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!--10.添加视图解析器-->
+    <mvc:view-resolvers>
+        <mvc:jsp prefix="/jsp/"></mvc:jsp>
+    </mvc:view-resolvers>
+    <!--11.控制器扫描-->
+    <context:component-scan base-package="com.westos.controller"></context:component-scan>
+    <!--12.添加文件上传解析器multipartResolver-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+    <!--13.静态资源处理器,避免将静态资源当成controller注解路径-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+    <!--14.配置拦截器-->
+    <context:component-scan base-package="com.westos.interceptor"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="*"/>
+            <ref bean="interceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>
