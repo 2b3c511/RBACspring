@@ -1,8 +1,6 @@
 package com.westos.controller;
 
-import com.westos.dao.UserDao;
 import com.westos.domain.Module;
-import com.westos.domain.Role;
 import com.westos.domain.User;
 import com.westos.service.ModuleService;
 import com.westos.service.RoleService;
@@ -11,13 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import static com.westos.util.Md5Util.md5;
 
 @Controller

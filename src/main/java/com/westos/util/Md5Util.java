@@ -2,7 +2,6 @@ package com.westos.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 public class Md5Util {
 
@@ -13,7 +12,6 @@ public class Md5Util {
         System.out.println(md5("123456"));
         System.out.println(md5("237984072149832074329804732894732980748329749832"));
         System.out.println(md5("237984072149832074329804732894732980748329749831"));
-
     }
     public static String md5(String str) {
         try {
@@ -40,5 +38,4 @@ public class Md5Util {
         }
         return sb.toString();
     }
-
 }

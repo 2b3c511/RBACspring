@@ -42,7 +42,4 @@ public class OrderController {
 
         return "/product/inventory/inventory";
     }
-
-
-
 }
